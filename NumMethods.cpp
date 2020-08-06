@@ -65,27 +65,27 @@ Coord2DMap Function_to_Map(std::function<double(double)> f, std::pair<double, do
 
 std::function<double(double)> Interpolate(Coord2DMap map, std::pair<double, double> interval)
 {
-	const double domain_width = (interval.second - interval.first);
-	const double internodal_width = domain_width / map.size();
+	const double internodal_width = (interval.second - interval.first) / map.size();
 	const double bias = -interval.first;
 	
 	return [&](double x)
 	{
-		x = (x + bias) / domain_width;
-		return map[floor(x) * domain_width + remainder(x, 1) * internodal_width];
+		x = (x + bias) / internodal_width;
+		double foot = floor(x) * internodal_width - bias;
+		return Interpolate(map[foot], map[foot + internodal_width], remainder(x, 1));
 	};
 }
 
 std::function<double(double)> Interpolate(Coord2DMap map, std::pair<double, double> interval, uint8_t poly_factor, uint32_t disloc_factor)
 {
-	double domain_width = (interval.second - interval.first);
-	double internodal_width = domain_width / map.size();
+	double internodal_width = (interval.second - interval.first) / map.size();
 	double bias = disloc_factor * internodal_width - interval.first;
 	internodal_width *= poly_factor;
 
 	return [&](double x)
 	{
-		x = (x + bias) / domain_width;
-		return map[floor(x) * domain_width + remainder(x, 1) * internodal_width];
+		x = (x + bias) / internodal_width;
+		double foot = floor(x) * internodal_width + interval.first;
+		return Interpolate(map[foot], map[foot + internodal_width], remainder(x, 1));
 	};
 }
