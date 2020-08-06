@@ -10,4 +10,4 @@
 
 typedef std::function<double(double)> func_t;//double->double function storage object
 
-func_t MAKE_POLY_FUNC(std::vector<double> coeffs); //eg:- MAKE_POLY_FUNC({2, 3, 1}); => 2x^2 + 3x + 1
+func_t PolynomialFunction(std::vector<double> coeffs); //eg:- PolynomialFunction({2, 3, 1}); => 2x^2 + 3x + 1
