@@ -6,7 +6,7 @@ Coord2D IntermediateValue(std::function<double(double)> f, std::pair<double, dou
 	double x = (interval.first + interval.second) / 2;
 	double y = f(x);
 
-	if (n)
+	if (n > 1)
 	{
 		if (y * f(interval.first) < 0)
 			return IntermediateValue(f, { interval.first, x }, n - 1);
