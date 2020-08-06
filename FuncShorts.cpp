@@ -1,6 +1,6 @@
 #include "FuncShorts.h"
 
-func_t MAKE_POLY_FUNC(std::vector<double> coeffs)
+func_t PolynomialFunction(std::vector<double> coeffs)
 {
 	return
 		[&coeffs](double x) {
