@@ -2,7 +2,7 @@
 
 Coord2D IntermediateValue(std::function<double(double)> f, Interval<double> interval, uint8_t n)
 {
-	double x = interval / 2;
+	double x = interval.mean();
 	double y = f(x);
 
 	if (n > 1)
