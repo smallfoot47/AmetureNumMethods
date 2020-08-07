@@ -1,6 +1,6 @@
 #include "NumMethods.h"
 
-Coord2D IntermediateValue(std::function<double(double)> f, Interval<double> interval, uint8_t n)
+Coord2D BisectionMethod(std::function<double(double)> f, Interval<double> interval, uint8_t n)
 {
 	double x = interval.mean();
 	double y = f(x);
@@ -8,9 +8,9 @@ Coord2D IntermediateValue(std::function<double(double)> f, Interval<double> inte
 	if (n > 1)
 	{
 		if (y * f(interval.lower) < 0)
-			return IntermediateValue(f, { interval.lower, x }, n - 1);
+			return BisectionMethod(f, { interval.lower, x }, n - 1);
 		else if (y * f(interval.upper) < 0)
-			return IntermediateValue(f, { x, interval.upper }, n - 1);
+			return BisectionMethod(f, { x, interval.upper }, n - 1);
 	}
 
 	return { x, y };
