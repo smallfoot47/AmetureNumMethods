@@ -6,8 +6,8 @@ typedef std::unordered_map<double, double> Coord2DMap;
 
 struct Coord2D //dual coordinate containment class
 {
-	union { double x, h, horizontal, right, abscissa, first; };
-	union { double y, k, vertical, up, ordinate, second; };
+	union { double x, h, horizontal, independent, abscissa, right,  first; };
+	union { double y, k, vertical, dependent, ordinate, up, second; };
 
 	operator bool()
 	{
@@ -78,7 +78,7 @@ struct Interval
 
 	bool operator ()(D_t x)//closed interval
 	{
-		return left < x&& x < right;
+		return left < x && x < right;
 	}
 
 	bool operator [](D_t x)//open interval
@@ -88,7 +88,7 @@ struct Interval
 
 	bool operator <<(D_t x)//left closed interval
 	{
-		return left < x&& x <= right;
+		return left < x && x <= right;
 	}
 
 	bool operator >>(D_t x)//right closed interval
@@ -120,31 +120,6 @@ struct Interval
 	{
 		return right - left;
 	}
-	/*
-	operator float()
-	{
-		float Left = (float)left;
-		float Right = (float)right;
-
-		return Right - Left;
-	}
-
-	operator long double()
-	{
-		long double Left = (long double)left;
-		long double Right = (long double)right;
-
-		return Right - Left;
-	}
-
-	operator int()
-	{
-		int Left = (int)left;
-		int Right = (int)right;
-
-		return Right - Left;
-	}
-	*/
 };
 
 template <class D_t> bool operator >(D_t x, Interval<D_t> I)
