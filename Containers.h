@@ -70,6 +70,11 @@ struct Interval
 	union { D_t left, lower, lower_bound, low, min, first; };
 	union { D_t right, upper, upper_bound, up, high, max, second; };
 
+	D_t mean()
+	{
+		return (min + max) / 2.0;
+	}
+	
 	template <class T_t>
 	operator Interval<T_t>()
 	{
