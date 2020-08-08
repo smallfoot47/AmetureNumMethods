@@ -9,55 +9,55 @@ struct Coord2D //dual coordinate containment class
 	union { double x, h, horizontal, independent, abscissa, right,  first; };
 	union { double y, k, vertical, dependent, ordinate, up, second; };
 
-	operator bool()
+	operator bool() const
 	{
 		return x && y;
 	}
 
-	operator double()
+	operator double () const
 	{
 		return sqrt(x * x + y * y);
 	}
 	
-	Coord2D const operator +(Coord2D C2D)
+	Coord2D operator +(const Coord2D C2D) const
 	{
 		return { x + C2D.x, y + C2D.y };
 	}
 	
-	Coord2D const operator -(Coord2D C2D)
+	Coord2D operator -(const Coord2D C2D) const
 	{
 		return { x - C2D.x, y - C2D.y };
 	}
 	
-	void operator +=(Coord2D C2D)
+	void operator +=(const Coord2D C2D)
 	{
 		x += C2D.x;
 		y += C2D.y;
 	}
 	
-	void operator -=(Coord2D C2D)
+	void operator -=(const Coord2D C2D)
 	{
 		x -= C2D.x;
 		y -= C2D.y;
 	}
 
-	Coord2D const operator *(double scale)
+	Coord2D operator *(const double scale) const
 	{
 		return { x * scale, y * scale };
 	}
 
-	Coord2D const operator /(double scale)
+	Coord2D operator /(const double scale) const
 	{
 		return { x / scale, y / scale };
 	}
 	
-	void operator *=(double scale)
+	void operator *=(const double scale)
 	{
 		x *= scale;
 		y *= scale;
 	}
 
-	void operator /=(double scale)
+	void operator /=(const double scale)
 	{
 		x *= scale;
 		y *= scale;
@@ -70,79 +70,79 @@ struct Interval
 	union { D_t left, lower, lower_bound, low, min, first; };
 	union { D_t right, upper, upper_bound, up, high, max, second; };
 
-	D_t mean()
+	D_t mean() const
 	{
 		return (min + max) / 2.0;
 	}
-	
+
 	template <class T_t>
-	operator Interval<T_t>()
+	operator Interval<T_t>() const
 	{
 		return { (T_t)left, (T_t)right };
 	}
-
-	bool operator ()(D_t x)//closed interval
+	
+	bool operator ()(const D_t& x) const//closed interval
 	{
 		return left < x && x < right;
 	}
 
-	bool operator [](D_t x)//open interval
+	bool operator [](const D_t& x) const//open interval
 	{
 		return left <= x && x <= right;
 	}
 
-	bool operator <<(D_t x)//left closed interval
+	bool operator << (const D_t& x) const//left closed interval
 	{
 		return left < x && x <= right;
 	}
 
-	bool operator >>(D_t x)//right closed interval
+	bool operator >> (const D_t& x) const//right closed interval
 	{
 		return left <= x && x < right;
 	}
 
-	bool operator <(D_t x)//beyond upper bound
+	bool operator < (const D_t& x) const//beyond upper bound
 	{
 		return x > right;
 	}
 
-	bool operator <=(D_t x)//beyond or on upper bound
+	bool operator <= (const D_t& x) const//beyond or on upper bound
 	{
 		return x >= right;
 	}
 
-	bool operator >(D_t x)//below lower bound
+	bool operator > (const D_t& x) const//below lower bound
 	{
 		return x > left;
 	}
 
-	bool operator >=(D_t x)//below or on lower bound
+	bool operator >= (const D_t& x) const//below or on lower bound
 	{
 		return x >= left;
 	}
 
-	operator D_t()
+	operator D_t() const
 	{
 		return right - left;
 	}
 };
 
-template <class D_t> bool operator >(D_t x, Interval<D_t> I)
+template <class D_t> bool operator >(const D_t& x, const Interval<D_t>& I)
 {
 	return I < x;
 }
 
-template <class D_t> bool operator >=(D_t x, Interval<D_t> I)
+template <class D_t> bool operator >=(const D_t& x, const Interval<D_t>& I)
 {
 	return I <= x;
 }
 
-template <class D_t> bool operator <(D_t x, Interval<D_t> I)
+template <class D_t> bool operator <(const D_t& x, const Interval<D_t>& I)
 {
 	return I > x;
 }
 
-template <class D_t> bool operator <=(D_t x, Interval<D_t> I)
+template <class D_t> bool operator <=(const D_t& x, const Interval<D_t>& I)
 {
 	return I >= x;
 }
