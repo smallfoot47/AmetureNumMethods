@@ -14,7 +14,7 @@ void NewtonsMethodApp()//Example on applying NewtonsMethod
 		return -sin(x) - (x + 1) * exp(x);  //define derivative here: in terms of x
 	);
 
-	double last_x = 0.5;  //initialize to x0
+	double last_x = 1;  //initialize to x0
 	std::cout << "x0>> "; PRINT_AT_VALUE(Func, 0.5);
 
 	for (int i = 0; i < 20; ++i)
@@ -50,10 +50,25 @@ void BisectionMethodApp()//Example on applying BisectionMethod AKA IntermediateV
 	}
 }
 
+void FunctionAbstractionApp()
+{
+	func_t Func = MAKE_FUNC(
+		return cos(x) - x * exp(x);
+	);
+	
+	Interval<double> domain = { 0, 1 };
+	auto Mapping = Function_to_Map(Func, domain, 0.1);
+	auto Approx = Interpolate(Mapping, domain);
+
+	for (double x = 0; x <= 1; x += 0.25)
+		std::cout << " at x = " << x << ", Approx(x) = " << Approx(x) << std::endl;
+}
+
 int main()
 {
 	LOG("LOG initailized");
 
 	NewtonsMethodApp();
 	//BisectionMethodApp();
+	//FunctionAbstractionApp();
 }
