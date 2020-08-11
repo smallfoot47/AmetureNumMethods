@@ -1,12 +1,14 @@
 #pragma once
 #include <vector>
 
+#include "Skintainers.h"
 #include "Containers.h"
 #include "Func++.h"
 
 Coord2D BisectionMethod(std::function<double(double)> f, Interval<double> interval, uint8_t n);//Closest zero within iterative limits
-inline Coord2D NewtonsMethod(std::function<double(double)> f, double x0, uint8_t n);//Approximate Newton's Method for approaching roots
-Coord2D NewtonsMethod(std::function<double(double)> f, std::function<double(double)> df, double x0, uint8_t n);//Explicitly defined Newton's Method for approaching roots
+Coord2D NewtonsMethod(std::function<double(double)> f, only<double> x0, uint8_t n);//Approximate Newton's Method for approaching roots
+Coord2D NewtonsMethod(std::function<double(double)> f, std::function<double(double)> df, only<double> x0, uint8_t n);//Explicitly defined Newton's Method for approaching roots
+Coord2D SecantMethod(std::function<double(double)> f, only<double> x0, only<double> x1, uint8_t n);//Secant method
 
 Coord2DMap Function_to_Map(std::function<double(double)> f, Interval<double> interval);//converts a bounded function to a Coord2DMap, disregarding memory optimization
 Coord2DMap Function_to_Map(std::function<double(double)> f, Interval<double> interval, uint32_t n);//converts a bounded function to a Coord2DMap, taking n discrete points from f
