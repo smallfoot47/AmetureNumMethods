@@ -7,21 +7,22 @@
 void NewtonsMethodApp()//Example on applying NewtonsMethod
 {
 	func_t Func = MAKE_FUNC(
-		return cos(x) - x * exp(x);  //define function here: in terms of x
+		return 1 / x - sqrt(exp(1));  //define function here: in terms of x
 	);
 
 	func_t Delta = MAKE_FUNC(
-		return -sin(x) - (x + 1) * exp(x);  //define derivative here: in terms of x
+		return -1 / pow(x, 2);  //define derivative here: in terms of x
 	);
 
 	double last_x = 1;  //initialize to x0
-	std::cout << "x0>> "; PRINT_AT_VALUE(Func, 0.5);
+	std::cout << "x0>> "; PRINT_AT_VALUE(Func, last_x);
 
 	for (int i = 0; i < 20; ++i)
 	{
 		/*
 		  auto BaseFunc = NewtonsMethod(Func, 0.5, i)//function, x0, iteration count: returns (x, y)
 		  #Alternative for functions that are harder to differentiate, at the cost of the rate of convergence
+		  #AKA Secant but x1 = x0 + dx(very small)
 		*/
 		auto NewtonsFunc = NewtonsMethod(Func, Delta, last_x, i + 1);//function, derivative, x0, iteration count: returns (x, y)
 		std::cout << "x" << i + 1 << ">> "; PRINT_FUNC_COORD(NewtonsFunc);
@@ -38,7 +39,7 @@ void BisectionMethodApp()//Example on applying BisectionMethod AKA IntermediateV
 	);
 
 	double last_x = 0.5;  //initialize to x0
-	std::cout << "x0>> "; PRINT_AT_VALUE(Func, 0.5);
+	std::cout << "x0>> "; PRINT_AT_VALUE(Func, last_x);
 
 	for (int i = 0; i < 20; ++i)
 	{
@@ -50,7 +51,7 @@ void BisectionMethodApp()//Example on applying BisectionMethod AKA IntermediateV
 	}
 }
 
-void FunctionAbstractionApp()
+void FunctionAbstractionApp()//Example on applying Function_to_Map and Interpolate(<uo_map>)
 {
 	func_t Func = MAKE_FUNC(
 		return cos(x) - x * exp(x);
@@ -64,11 +65,35 @@ void FunctionAbstractionApp()
 		std::cout << " at x = " << x << ", Approx(x) = " << Approx(x) << std::endl;
 }
 
+void SecantMethodApp()//Example on applying SecantMethod
+{
+	func_t Func = MAKE_FUNC(
+		return log(x);  //define function here: in terms of x
+	);
+
+	Interval<double> domain = { 0.5, 5 }; //initialize to x0 and x1
+	
+	domain = Ascending(domain);
+
+	std::cout << "x0>> "; PRINT_AT_VALUE(Func, domain.right);
+	std::cout << "x1>> "; PRINT_AT_VALUE(Func, domain.left);
+
+	double last_x = domain.left;
+	for (int i = 2; i <= 20; ++i)
+	{
+		auto SecantFunc = SecantMethod(Func, domain.right, domain.left, i);
+		std::cout << "x" << i << ">> "; PRINT_FUNC_COORD(SecantFunc);
+
+		last_x = SecantFunc.independent;
+	}
+}
+
 int main()
 {
 	LOG("LOG initailized");
 
-	NewtonsMethodApp();
+	//NewtonsMethodApp();
 	//BisectionMethodApp();
 	//FunctionAbstractionApp();
+	SecantMethodApp();
 }
