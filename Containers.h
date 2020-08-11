@@ -146,3 +146,15 @@ template <class D_t> bool operator <=(const D_t& x, const Interval<D_t>& I)
 {
 	return I >= x;
 }
+
+template <class D_t> Interval<D_t> Ascending(const Interval<D_t> I)
+{
+	D_t min = I.left < I.right ? I.left : I.right;
+	return { min, I.left + I.right - min };
+}
+
+template <class D_t> Interval<D_t> Descending(const Interval<D_t> I)
+{
+	D_t min = I.left < I.right ? I.left : I.right;
+	return { I.left + I.right - min, min };
+}
