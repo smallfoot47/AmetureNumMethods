@@ -51,7 +51,7 @@ void BisectionMethodApp()//Example on applying BisectionMethod AKA IntermediateV
 	}
 }
 
-void FunctionAbstractionApp()//Example on applying Function_to_Map and Interpolate(<uo_map>)
+void FunctionAbstractionApp()
 {
 	func_t Func = MAKE_FUNC(
 		return cos(x) - x * exp(x);
@@ -65,13 +65,13 @@ void FunctionAbstractionApp()//Example on applying Function_to_Map and Interpola
 		std::cout << " at x = " << x << ", Approx(x) = " << Approx(x) << std::endl;
 }
 
-void SecantMethodApp()//Example on applying SecantMethod
+void SecantMethodApp()
 {
 	func_t Func = MAKE_FUNC(
 		return log(x);  //define function here: in terms of x
 	);
 
-	Interval<double> domain = { 0.5, 5 }; //initialize to x0 and x1
+	Interval<double> domain = { 0.5, 5.0 }; //initialize to x0 and x1
 	
 	domain = Ascending(domain);
 
@@ -83,6 +83,7 @@ void SecantMethodApp()//Example on applying SecantMethod
 	{
 		auto SecantFunc = SecantMethod(Func, domain.right, domain.left, i);
 		std::cout << "x" << i << ">> "; PRINT_FUNC_COORD(SecantFunc);
+		LOG("Variation: " << abs(1 - SecantFunc.independent / last_x) * 100 << "%");
 
 		last_x = SecantFunc.independent;
 	}
