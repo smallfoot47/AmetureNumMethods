@@ -74,6 +74,16 @@ namespace IterationBasedApproximation
 
 		return SMApprox;
 	}
+
+	Coord2D FixedPointMethod(func_t f, only<double> x0, uint8_t n)
+	{
+		double F0 = f(x0);
+
+		if (n > 1)
+			return FixedPointMethod(f, F0, n - 1);
+
+		return { F0, f(F0) };
+	}
 }
 
 namespace ErrorBasedApproximation
@@ -83,7 +93,7 @@ namespace ErrorBasedApproximation
 
 		Coord2D Approx = IterationBasedApproximation::BisectionMethod(f, interval, 1u);
 		double last_x = Approx.independent;
-		double magnitude = 0;
+		double magnitude = 0.0;
 
 		do {
 			if (Approx.dependent * f(interval.left) < 0.0)
@@ -109,7 +119,7 @@ namespace ErrorBasedApproximation
 
 		Coord2D Approx = IterationBasedApproximation::NewtonsMethod(f, x0, 1u);
 		double last_x = Approx.independent;
-		double magnitude = 0;
+		double magnitude = 0.0;
 
 		do {
 			magnitude = -log10(abs(Approx.independent - last_x));
@@ -126,7 +136,7 @@ namespace ErrorBasedApproximation
 	{
 		Coord2D Approx = IterationBasedApproximation::NewtonsMethod(f, df, x0, 1u);
 		double last_x = Approx.independent;
-		double magnitude = 0;
+		double magnitude = 0.0;
 
 		do {
 			magnitude = -log10(abs(Approx.independent - last_x));
@@ -143,7 +153,7 @@ namespace ErrorBasedApproximation
 	{
 		Coord2D Approx = IterationBasedApproximation::SecantMethod(f, x0, x1, 2u);
 		double last_x = Approx.independent;
-		double magnitude = 0;
+		double magnitude = 0.0;
 
 		do {
 			magnitude = -log10(abs(Approx.independent - last_x));
@@ -159,7 +169,7 @@ namespace ErrorBasedApproximation
 	Coord2D RegulaFalsiMethod(func_t f, Interval<double> interval, only<double> accuracy)
 	{
 		Coord2D Approx = IterationBasedApproximation::SecantMethod(f, interval.left, interval.right, 2u);
-		double magnitude = 0;
+		double magnitude = 0.0;
 		double last_x = Approx.independent;
 
 		do {
@@ -179,6 +189,20 @@ namespace ErrorBasedApproximation
 		} while (magnitude < accuracy);
 
 		return Approx;
+	}
+
+	Coord2D FixedPointMethod(func_t f, only<double> x0, only<double> accuracy)
+	{
+		Coord2D Approx; Approx.dependent = x0;
+		double magnitude = 0.0;
+
+		do {
+			Approx.independent = Approx.dependent;
+			Approx.dependent = f(Approx.independent);
+
+			magnitude = -log10(abs(Approx.dependent - Approx.independent));
+		
+		} while (magnitude < accuracy);
 	}
 }
 
