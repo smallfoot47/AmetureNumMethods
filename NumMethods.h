@@ -16,21 +16,23 @@ namespace IterationBasedApproximation
 	Coord2D NewtonsMethod(func_t f, func_t df, only<double> x0, uint8_t n);//Newton's Method for approaching roots within iterative limit: starts at n = 1
 	Coord2D SecantMethod(func_t f, only<double> x0, only<double> x1, uint8_t n);//Closest root within iterative limit: starts at n = 2
 	Coord2D RegulaFalsiMethod(func_t f, Interval<double> interval, uint8_t n);//Closest root within iterative limit: starts at n = 1
+	Coord2D FixedPointMethod(func_t f, only<double> x0, uint8_t n);//Closest root within iterative limit: starts at n = 1
 }
 
 namespace ErrorBasedApproximation
 {
 	/*
-      Error-bound Iterative Models: returns a function of the magnitude of maximum error to the base 10 which returns { x, f(x) }
-     [
-      Here error is vaugely used. A more appropriate wording would be variation as these functions measure the variation in outputs per iteration.
-     ]
-    */
+	  Error-bound Iterative Models: returns a function of the magnitude of maximum error to the base 10 which returns { x, f(x) }
+	 [
+	  Here error is vaugely used. A more appropriate wording would be variation as these functions measure the variation in outputs per iteration.
+	 ]
+	*/
 	Coord2D BisectionMethod(func_t f, Interval<double> interval, only<double> accuracy);//Closest root within given error
 	Coord2D NewtonsMethod(func_t f, only<double> x0, only<double> accuracy);//Approximate Newton's Method for approaching roots within given error
 	Coord2D NewtonsMethod(func_t f, func_t df, only<double> x0, only<double> accuracy);//Newton's Method for approaching roots within given error
-	Coord2D SecantMethod(func_t f, only<double> x0, only<double> x1, only<double> accuracy);//Closest root within given error
-	Coord2D RegulaFalsiMethod(func_t f, Interval<double> interval, only<double> accuracy);//Closest root within given error
+	Coord2D SecantMethod(func_t f, only<double> x0, only<double> x1, only<double> accuracy);//Closest zero within given error
+	Coord2D RegulaFalsiMethod(func_t f, Interval<double> interval, only<double> accuracy);//Closest zero within given error
+	Coord2D FixedPointMethod(func_t f, only<double> x0, only<double> accuracy);//Closest root within given error: starts at n = 1
 }
 
 Coord2DMap Function_to_Map(func_t f, Interval<double> interval);//converts a bounded function to a Coord2DMap, disregarding memory optimization
