@@ -361,40 +361,6 @@ namespace ErrorBasedApproximation
 	}
 }
 
-Coord2DMap Function_to_Map(func_t f, Interval<double> interval)
-{
-	return Function_to_Map(f, interval, 1E-5);
-}
-
-Coord2DMap Function_to_Map(func_t f, Interval<double> interval, uint32_t n)
-{
-	Coord2DMap F(n--);
-
-	double epsilon = interval / n;
-
-	for (uint32_t i = 0u; i <= n; ++i)
-	{
-		double x = interval.first + i * epsilon;
-		F[x] = f(x);
-	}
-
-	return F;
-}
-
-Coord2DMap Function_to_Map(func_t f, Interval<double> interval, double epsilon)
-{
-	uint32_t size = (uint32_t)(interval / epsilon) + 1u;
-	Coord2DMap F; F.reserve(size);
-	
-	for (uint32_t i = 0u; i < size; ++i)
-	{
-		double x = interval.first + i * epsilon;
-		F[x] = f(x);
-	}
-
-	return F;
-}
-
 std::vector<double> DifferenceLadder(std::vector<double> Ypoints)
 {
 	{
@@ -491,83 +457,6 @@ std::vector<double> DevidedDifferenceLadder(std::vector<Coord2D> points)
 	return ddiff;
 }
 
-func_t LinearInterpolation(std::vector<Coord2D> points)
-{
-	std::function<Interval<double>(double)> get_interval_of =
-		[=](double x) {
-		
-		Interval<double> I = { 0, 0 };
-
-		if (x < points.back().x)
-			return I;
-
-		for (size_t i = 0; i < points.size() - 1; ++i)
-		{
-			I = { points[i].x, points[i + 1].x };
-
-			if (I[x])
-				return I;
-		}
-
-		return I;
-	};
-
-	return [=](double x) { 
-		auto subsection = get_interval_of(x);
-		return LinearInterpolate(subsection.lower_bound, subsection.upper_bound, remainder((x - subsection.lower_bound) / subsection, 1.0));
-	};
-}
-
-func_t LinearInterpolation(Coord2DMap& map, const Interval<double>& interval)
-{
-	/*
-	  Linearly interpolates between each consecutive node in map
-	*/
-	return LinearInterpolation(map, interval, map.size());
-}
-
-func_t LinearInterpolation(Coord2DMap& map, const Interval<double>& interval, uint32_t n)
-{
-	const double internodal_width = interval / (n - 1u);
-	const double bias = -interval.first;
-
-	return [=](double x) mutable
-	{
-		if (interval[x])
-		{
-			x = (x + bias) / internodal_width;
-			double foot = floor(x) * internodal_width - bias;
-			return LinearInterpolate(map[foot], map[foot + internodal_width], abs(remainder(x, 1.0)));
-		}
-
-		return 0.0;
-	};
-}
-
-func_t LinearInterpolation(Coord2DMap& map, const Interval<double>& interval, uint16_t poly_factor, uint32_t disloc_factor)
-{
-	/*
-	  poly_factor determines the number of nodes to skip over to reach the next relavent node for interpolation
-	  disloc_factor determines the number of nodes the initial node is displaced by(and this dislocation carries over to all subsequent nodes)
-	*/
-
-	double internodal_width = interval / (map.size() - 1u);
-	double bias = disloc_factor * internodal_width - interval.first;
-	internodal_width *= poly_factor;
-
-	return [=](double x) mutable
-	{
-		if (interval[x])
-		{
-			x = (x + bias) / internodal_width;
-			double foot = floor(x) * internodal_width + interval.first;
-			return LinearInterpolate(map[foot], map[foot + internodal_width], abs(remainder(x, 1.0)));
-		}
-
-		return 0.0;
-	};
-}
-
 polynomial::poly_func<double> NewtonsInterpolation(std::vector<double> points, Interval<double> input_domain) {
 	auto Y = DifferenceLadder(points);
 
@@ -629,6 +518,65 @@ polynomial::poly_func<double> NewtonsInterpolation(std::vector<Coord2D> points) 
 			)
 		}
 		poly = poly + term * Y[i];
+	}
+
+	return poly;
+}
+
+
+polynomial::poly_func<double> LegrangesInterpolation(std::vector<Coord2D> points) {
+	std::vector<double> scale(points.size());
+
+	for (size_t i = 0u; i < scale.size(); ++i) {
+		scale[i] = points[i].y;
+		{
+			PUSH_STEP_LOG(
+				std::cout << std::endl << "denominator of term" << i << ": " << std::endl;
+			)
+		}
+		size_t end = i + scale.size();
+		for (size_t j = i + 1; j != end; j++) {
+			{
+				PUSH_STEP_LOG(
+					std::cout << "(" << points[i].x << " - " << points[j % scale.size()].x << " = " << points[i].x - points[j % scale.size()].x << ")";
+				)
+			}
+			scale[i] /= (points[i].x - points[j % scale.size()].x);
+		}
+		{
+			PUSH_STEP_LOG(
+				std::cout << std::endl << "denominator of term" << i;
+    			scale[i] ?
+	  			std::cout << " = " << points[i].y / scale[i] << std::endl:
+				std::cout << " is not relevant since y" << i << " is 0" << std::endl;
+			)
+		}
+	}
+
+	polynomial::poly_func<double> poly = {};
+	for (size_t i = 0u; i < scale.size(); ++i) {
+		polynomial::poly_func<double> term = { scale[i] };
+
+		size_t end = i + points.size();
+		for (size_t j = i + 1; j != end; j = ++j) {
+			term.addRoots({ points[j % points.size()].x });
+			{
+				PUSH_STEP_LOG(
+					std::cout << std::endl << "term" << i << " = ";
+				    scale[i] ?
+		    		std::cout << points[i].y << "(" << (term / scale[i]).String("x") << ")/" << points[i].y / scale[i]:
+					std::cout << "0";
+				)
+			}
+			if (scale[i] == 0) break;
+		}
+		{
+			PUSH_STEP_LOG(
+				std::cout << std::endl << "\np(x) = (" << poly.String("x") << ") + (" << term.String("x") << ")" << std::endl <<
+				"p(x) = " << (poly + term).String("x") << std::endl;
+			);
+		}
+		poly += term;
 	}
 
 	return poly;
