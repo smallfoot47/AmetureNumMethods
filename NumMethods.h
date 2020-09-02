@@ -96,13 +96,6 @@ namespace ErrorBasedApproximation
 	Coord2D FixedPointMethod(func_t f, only<double> x0, only<double> accuracy);
 }
 
-//converts a bounded function to a Coord2DMap, disregarding memory optimization
-Coord2DMap Function_to_Map(func_t f, Interval<double> interval);
-//converts a bounded function to a Coord2DMap, taking n discrete points from f
-Coord2DMap Function_to_Map(func_t f, Interval<double> interval, uint32_t n);
-//converts a bounded function to a Coord2DMap, seperated by epsilon amoung adjacent points along X
-Coord2DMap Function_to_Map(func_t f, Interval<double> interval, double epsilon);
-
 /*
   generates a row of differences(in delta form) for first point
   -Accepts {collection of Y values}
@@ -113,15 +106,6 @@ std::vector<double> DifferenceLadder(std::vector<double> points);
   -Accepts {collection of Coord2Ds(x, y)}
 */
 std::vector<double> DevidedDifferenceLadder(std::vector<Coord2D> points);
-
-//makes mapping linearly continous
-func_t LinearInterpolation(std::vector<Coord2D> points);
-//makes mapping linearly continous
-func_t LinearInterpolation(Coord2DMap& map, const Interval<double>& interval);
-//makes mapping linearly continous with n nodes
-func_t LinearInterpolation(Coord2DMap& map, const Interval<double>& interval, uint32_t n);
-//makes mapping linearly continous with vertice-count controlled by poly_factor and input bias controlled by disloc_factor
-func_t LinearInterpolation(Coord2DMap& map, const Interval<double>& interval, uint16_t poly_factor, uint32_t disloc_factor = 0);
 
 /*
   estimates a polynomial that passes through the given points
@@ -139,20 +123,3 @@ polynomial::poly_func<double> NewtonsInterpolation(std::vector<Coord2D> points);
   -Accepts {collection of Coord2Ds(x, y) (Ascending order of x)}
 */
 polynomial::poly_func<double> LegrangesInterpolation(std::vector<Coord2D> points);
-
-/*
-converts from [0, 1] space to [foot, head] space linearly
-*/
-template <class V_t, class P_t>
-inline V_t LinearInterpolate(V_t foot, V_t head, P_t percent)
-{
-	return foot + (head - foot) * clamp(percent);
-}
-
-/*
-  converts from (-inf, inf) space to [foot, head] space wrt the sigmoid function
-*/
-template <class V_t, class P_t>
-inline V_t SigmoidInterpolate(V_t foot, V_t head, P_t affinity){
-	return foot + (head - foot) * sigmoid(affinity);
-}
