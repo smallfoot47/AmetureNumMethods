@@ -158,7 +158,7 @@ namespace IterationBasedApproximation
 	Coord2D FixedPointMethod(func_t f, only<double> x0, uint16_t n)
 	{
 		f = MAKE_FUNC(
-		        return f(x) - x;
+		        return f(x) + x;
 		    );
 		
 		double F0 = f(x0);
@@ -341,7 +341,7 @@ namespace ErrorBasedApproximation
 	Coord2D FixedPointMethod(func_t f, only<double> x0, only<double> accuracy)
 	{
 		f = MAKE_FUNC(
-			return f(x) - x;
+			return f(x) + x;
 		    );
 		
 		Coord2D Approx; Approx.dependent = x0;
