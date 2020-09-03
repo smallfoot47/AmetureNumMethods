@@ -17,7 +17,7 @@ Firstly let's tackle down all our options for numerical approximations.
    In error based approximations, the terminating condtion would be when the error from the last term falls under the maximum permitable error.
   ]
   
-  1.BisectionMethod:
+  1. BisectionMethod:
       It takes in the function in question and the initial interval.
       The mean of the interval(<x>) is computed and the functional projection of that value is realized.
         
@@ -36,7 +36,7 @@ Firstly let's tackle down all our options for numerical approximations.
       
       It returns the resulting approximate root and it's functional value.
    
- 2.NewtonsMethod:
+ 2. NewtonsMethod:
     It takes in the function in question and the initial value of independent variable. Here the derivative is numerically approximated.
     It can also take the function in question, it's derivative, and the initial value of independent variable.
     
@@ -51,7 +51,7 @@ Firstly let's tackle down all our options for numerical approximations.
     
     It returns the resulting approximate root and it's functional value.
  
- 3.SecantMethod:
+ 3. SecantMethod:
       It takes in the function in question and two independent variables.
       
       If the functional values of both variables are different,
@@ -64,7 +64,7 @@ Firstly let's tackle down all our options for numerical approximations.
       
       It returns the resulting approximate root and it's functional value.
  
- 4.RegulaFalsiMethod:
+ 4. RegulaFalsiMethod:
       It takes in the function in question and the initial interval.
       
       If the functional values of both variables are different,
@@ -86,8 +86,12 @@ Firstly let's tackle down all our options for numerical approximations.
       
       It returns the resulting approximate root and it's functional value.
 
-5.FixedPointMethod:
+5. FixedPointMethod:
       It takes in the function in question and the initial independent variable.
+      It modifies the function as such,
+      
+          f(x) => f(x) - x
+      
       It then computes the functional value at that point.
    
           f(x) = new x
@@ -98,7 +102,7 @@ Firstly let's tackle down all our options for numerical approximations.
 *********************************************************************************************************************************************************************************
 Now onto the interpolation algorithms.
 
-  1.NewtonsInterpolation:Equally spaced inputs
+  1. NewtonsInterpolation:Equally spaced inputs
       It takes in a collection of values and the smallest interval of input variables.
       It then computes the class width of the dataset.
           
@@ -118,7 +122,7 @@ Now onto the interpolation algorithms.
       
       It return the resulting polynomial.
       
- 2.NewtonsInterpolation:Ambigously spaced inputs
+ 2. NewtonsInterpolation:Ambigously spaced inputs
       It takes in a collection of 2d coordinates of the form (x, y).
     
       It then proceeds to generate the devided difference table and extract only the upper row. Lets call this collection the DifferenceLadder.
@@ -135,7 +139,7 @@ Now onto the interpolation algorithms.
       
       It return the resulting polynomial.      
       
- 1.LegrangesInterpolation:Equally spaced inputs
+ 3. LegrangesInterpolation:Equally spaced inputs
       It takes in a collection of 2d coordinates of the form (x, y).
     
       It then proceeds to generate the values of (y of the ith input coordinate)/(x of ith input coordinate - x of jth input coordinate), where j is not i.
@@ -150,3 +154,4 @@ Now onto the interpolation algorithms.
       multiplied by the corresponding DifferenceLadder.
       
       It return the resulting polynomial.      
+*********************************************************************************************************************************************************************************
